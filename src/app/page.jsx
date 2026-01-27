@@ -1,4 +1,5 @@
 import Logo from "@/components/logo/Logo";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import {
   ShieldCheck,
   Lock,
@@ -10,23 +11,22 @@ import {
 export default function LoginPage() {
   return (
     <div className="min-h-screen flex w-full">
+      <div className="absolute top-4 right-4 z-50">
+        <ThemeToggle />
+      </div>
       <div className="hidden lg:flex w-1/2 bg-primary relative overflow-hidden flex-col justify-between p-12 text-primary-foreground">
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary-foreground/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary-foreground/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
 
         {/* Logo */}
-        <div className="flex items-center gap-2 z-10">
-          <Logo/>
-          {/* <div className="bg-primary-foreground/10 p-2 rounded-lg backdrop-blur-sm">
-            <ShieldCheck size={32} className="text-primary-foreground" />
+        <div className="flex items-center justify-between z-10 w-full">
+          <div className="flex items-center gap-2">
+            <Logo variant="inverted" />
           </div>
-          <span className="font-logo text-primary-foreground text-3xl font-bold tracking-tight">
-            Q<span className="text-primary-foreground/80">Receipt</span>
-          </span> */}
         </div>
 
         <div className="z-10 max-w-md">
-          <h1 className="font-logo text-5xl font-bold mb-6 leading-tight">
+          <h1 className="font-heading text-5xl font-bold mb-6 leading-tight">
             Digital Trust, <br />
             <span className="text-primary-foreground/80">Simplified.</span>
           </h1>
@@ -61,6 +61,9 @@ export default function LoginPage() {
             <span className="font-logo text-3xl font-bold text-foreground">
               Q<span className="text-primary">Receipt</span>
             </span>
+          </div>
+          <div className="lg:hidden absolute top-4 right-4">
+            <ThemeToggle />
           </div>
 
           <div className="text-center lg:text-left">

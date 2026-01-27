@@ -5,6 +5,7 @@ export default function Logo({
   className = "",
   size = "md", // option: "sm" | "md" | "lg"
   href = "/",
+  variant = "default", // option: "default" | "inverted"
   onClick,
 }) {
   const sizeMap = {
@@ -15,6 +16,11 @@ export default function Logo({
 
   const { icon: iconSize, text: textSize } = sizeMap[size] || sizeMap.md;
   const Component = onClick ? "div" : Link;
+
+  const textColor =
+    variant === "inverted" ? "text-primary-foreground" : "text-foreground";
+  const accentColor =
+    variant === "inverted" ? "text-primary-foreground/90" : "text-primary";
 
   return (
     <Component
@@ -35,9 +41,9 @@ export default function Logo({
       </div>
 
       <span
-        className={`font-logo font-extrabold tracking-tight leading-none text-gray-900 transition-colors ${textSize}`}
+        className={`font-logo font-extrabold tracking-tight leading-none ${textColor} transition-colors ${textSize}`}
       >
-        Q<span className="text-brand-600">Receipt</span>
+        Q<span className={accentColor}>Receipt</span>
       </span>
     </Component>
   );
