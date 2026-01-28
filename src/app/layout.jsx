@@ -23,6 +23,7 @@ export const metadata = {
 };
 
 import { ThemeProvider } from "@/components/theme-provider";
+import AuthProvider from "@/components/AuthProvider";
 
 export default function RootLayout({ children }) {
   return (
@@ -36,7 +37,7 @@ export default function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <AuthProvider>{children}</AuthProvider>
         </ThemeProvider>
       </body>
     </html>

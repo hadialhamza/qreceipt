@@ -1,3 +1,7 @@
+"use client";
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Logo from "@/components/logo/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import {
@@ -9,6 +13,35 @@ import {
 } from "lucide-react";
 
 export default function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const res = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (res.error) {
+        alert("Invalid Email or Password");
+        setLoading(false);
+      } else {
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong");
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex w-full">
       <div className="absolute top-4 right-4 z-50">
@@ -73,7 +106,7 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <form className="mt-8 space-y-6">
+          <form onSubmit={handleLogin} className="mt-8 space-y-6">
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1">
@@ -86,6 +119,8 @@ export default function LoginPage() {
                   <input
                     type="email"
                     required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="pl-10 block w-full rounded-lg border border-input bg-background py-3 text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-input outline-none transition-all"
                     placeholder="admin@globalinsurance.com"
                   />
@@ -103,6 +138,8 @@ export default function LoginPage() {
                   <input
                     type="password"
                     required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     className="pl-10 block w-full rounded-lg border border-input bg-background py-3 text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-input outline-none transition-all"
                     placeholder="••••••••"
                   />
@@ -138,10 +175,13 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-lg text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-all shadow-lg hover:shadow-xl"
+              disabled={loading}
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-lg text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-all shadow-lg hover:shadow-xl disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              Sign in to Dashboard
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              {loading ? "Signing in..." : "Sign in to Dashboard"}
+              {!loading && (
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              )}
             </button>
           </form>
 
