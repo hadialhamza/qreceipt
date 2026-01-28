@@ -49,22 +49,53 @@ export default function CreateReceiptPage() {
     }
   };
 
+  // Handle file upload and call AI API
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
+    // Show loading indicator
     setAiLoading(true);
-    setTimeout(() => {
-      setFormData({
-        clientName: "Demo Client Ltd.",
-        amount: "15000",
-        paymentMode: "Cheque",
-        date: "2023-10-25",
-        purpose: "Fire Insurance Premium",
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      // Call our backend API
+      const res = await fetch("/api/extract", {
+        method: "POST",
+        body: formData,
       });
+
+      const result = await res.json();
+
+      if (result.success && result.data) {
+        // Update form state with the extracted data
+        setFormData((prev) => ({
+          ...prev,
+          clientName: result.data.clientName || prev.clientName,
+          amount: result.data.amount || prev.amount,
+          date: result.data.date || prev.date,
+          paymentMode: result.data.paymentMode || "Cash",
+          purpose: result.data.purpose || prev.purpose,
+          bankName: result.data.bankName || prev.bankName,
+          chequeNo: result.data.chequeNo || prev.chequeNo,
+          policyNo: result.data.policyNo || prev.policyNo,
+        }));
+
+        // Optional: Show a success toast or alert
+        // alert("✨ Magic! Data extracted successfully.");
+      } else {
+        console.error("Extraction failed:", result);
+        alert("Could not extract data. Please try a clearer image.");
+      }
+    } catch (error) {
+      console.error("AI Service Error:", error);
+      alert("AI Service is temporarily unavailable.");
+    } finally {
+      // Hide loading indicator
       setAiLoading(false);
-      alert("Magic! AI extracted data from image. 🪄");
-    }, 2000);
+    }
   };
 
   return (
